@@ -217,13 +217,13 @@ def get_random_response(responses):
     return random.choice(responses)
 
 def find_faq(query):
-    # ... (le code existant reste le même)
+    
     results = []
     query_lower = query.lower()
     
     for category in faq_questions:
         for faq in category["questions"]:
-            # 1. Recherche dans les keywords (PRIORITÉ MAXIMALE)
+           
             if "keywords" in faq:
                 keyword_matches = sum(1 for keyword in faq["keywords"] if keyword.lower() in query_lower)
                 if keyword_matches > 0:
@@ -231,29 +231,29 @@ def find_faq(query):
                     results.append(faq)
                     continue
             
-            # 2. Recherche dans la question
+          
             if query_lower in faq["question"].lower():
                 faq["match_score"] = 5
                 results.append(faq)
                 continue
             
-            # 3. Recherche dans les tags
+      
             if any(query_lower in tag.lower() for tag in faq["tags"]):
                 faq["match_score"] = 3
                 results.append(faq)
                 continue
             
-            # 4. Recherche dans les réponses
+        
             for response in faq["responses"]:
                 if query_lower in response.lower():
                     faq["match_score"] = 1
                     results.append(faq)
                     break
     
-    # Trier par score décroissant
+  
     results.sort(key=lambda x: x.get("match_score", 0), reverse=True)
     
-    # Nettoyer les scores temporaires
+   
     for result in results:
         if "match_score" in result:
             del result["match_score"]
@@ -261,7 +261,6 @@ def find_faq(query):
     return results
 
 def get_suggestions(query):
-    # ... (le code existant reste le même)
     suggestions = []
     query_lower = query.lower()
     
@@ -278,13 +277,11 @@ def get_suggestions(query):
                     if len(suggestions) >= 5:
                         return suggestions
             
-            # Vérifier les tags similaires
             has_matching_tag = any(
                 tag.lower() in query_lower or query_lower in tag.lower()
                 for tag in faq["tags"]
             )
-            
-            # Vérifier les mots-clés dans la question
+         
             question_words = set(faq["question"].lower().split())
             query_words = set(query_lower.split())
             has_matching_words = len(question_words.intersection(query_words)) > 0
